@@ -1,3 +1,9 @@
 
 
 @import "~bootstrap/scss/bootstrap";
+
+.box-shadow{
+    -webkit-box-shadow: 32px 25px 7px -20px rgba(199,199,199,0.62);
+-moz-box-shadow: 32px 25px 7px -20px rgba(199,199,199,0.62);
+box-shadow: 32px 25px 7px -20px rgba(199,199,199,0.62);
+}

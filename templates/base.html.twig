@@ -2,16 +2,20 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>
+            {% block title %}Welcome!
+            {% endblock %}
+        </title>
         {% block stylesheets %}
-          {{ encore_entry_link_tags('app')}}
+            {{ encore_entry_link_tags('app')}}
         {% endblock %}
     </head>
     <body class="bg-light">
-        {% block body %}{% endblock %}
-    
-        {% block javascripts %}
-             {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </body>
-</html>
+        <div class="container"> {% block body %}{% endblock %}
+            </div>
+
+            {% block javascripts %}
+                {{ encore_entry_script_tags('app') }}
+            {% endblock %}
+        </body>
+    </html>
