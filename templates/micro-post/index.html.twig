@@ -5,19 +5,21 @@
             <a href="{{path('micro_post_create')}}">Add New</a>
         </small>
         {% for post in posts %}
+         <a href="{{path('micro_post_post',{'id':post.id})}}">
             <div class="media text-muted pt-3">
-                <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text=MJ&bg=e83e8c&fg&size=8">
-                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-grey">
-                    <span class="d-block">
-                        <strong class="text-grey-dark">@username</strong>
-                        <small>{{post.time|date("d/m/Y")}}</small>
+               
+                    <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text=MJ&bg=e83e8c&fg&size=8">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-grey">
+                        <span class="d-block">
+                            <strong class="text-grey-dark">@username</strong>
+                            <small>{{post.time|date("d/m/Y")}}</small>
 
-                    </span>
-                    {{post.text}}
-                </p>
-
+                        </span>
+                        {{post.text}}
+                    </p>
+                
             </div>
-
+         </a>
 
         {% endfor %}
     </div>

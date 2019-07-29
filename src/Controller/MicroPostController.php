@@ -79,4 +79,15 @@ class MicroPostController extends Controller
             )
         );
     }
+    /**
+     * @Route("/post/{id}",name="micro_post_post")
+     */
+     public function post($id)
+     {
+         $post= $this->microPostRepository->find($id);
+         $html = $this->twig->render('micro-post/post.html.twig', [
+             'post' => $post
+         ]);
+         return new Response($html);
+     }
 }
