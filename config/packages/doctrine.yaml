@@ -9,6 +9,16 @@ doctrine:
       collate: utf8mb4_unicode_ci
 
     url: "%env(resolve:DATABASE_URL)%"
+    #  default_connection: default
+    #     connections:
+    #         default:
+    #             driver:   pdo_mysql
+    #             host:     'localhost'
+    #             port:     '33060'
+    #             dbname:   'symfonyblog'
+    #             user:     'homestead'
+    #             password: 'secret'
+    #             charset:  'utf8mb4'
   orm:
     auto_generate_proxy_classes: true
     naming_strategy: doctrine.orm.naming_strategy.underscore
