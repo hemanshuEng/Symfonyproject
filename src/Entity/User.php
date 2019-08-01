@@ -52,6 +52,10 @@ class User implements UserInterface, \Serializable
      * @Assert\Length(min=4,max=50)
      */
     private $fullname;
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Micropost",mappedBy="user")
+     */
+    private $posts;
     public function getRoles()
     {
         return [
