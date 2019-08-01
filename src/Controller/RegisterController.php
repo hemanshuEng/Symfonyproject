@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\MicroPost;
 use App\Form\UserType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
