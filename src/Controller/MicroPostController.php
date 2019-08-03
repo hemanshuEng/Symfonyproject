@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\MicroPost;
 
 use App\Form\MicroPostType;
+use App\Security\MicroPostVoter;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,8 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+// use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @Route("/micro-post")
@@ -35,13 +39,30 @@ class MicroPostController extends Controller
      * @var FormFactoryInterface
      */
     private $formFactory;
+    /**
+     * @var EntityManagerInerface
+     */
+    private $entityManager;
+    /**
+     * @var RouterInterface 
+     */
+    private $router;
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBagInterface;
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
     public function __construct(
         \Twig_Environment $twig,
         MicroPostRepository $microPostRepository,
         FormFactoryInterface $formFactory,
         EntityManagerInterface $entityManager,
         RouterInterface $router,
-        FlashBagInterface $flashBagInterface
+        FlashBagInterface $flashBagInterface,
+        AuthorizationCheckerInterface $authorizationChecker
     ) {
         $this->twig = $twig;
         $this->microPostRepository = $microPostRepository;
@@ -49,6 +70,7 @@ class MicroPostController extends Controller
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->flashBagInterface = $flashBagInterface;
+        $this->authorizationChecker = $authorizationChecker;
     }
     /**
      * @Route("/",name="micro_post_index")
@@ -63,9 +85,13 @@ class MicroPostController extends Controller
     }
     /**
      *@Route("/edit/{id}",name="micro_post_edit")
+     *@Security("is_granted('edit',microPost)",message="Access denied")
      */
     public function edit(MicroPost $microPost, Request $request)
     {
+        if (!$this->authorizationChecker->isGranted('edit', $microPost)) {
+            throw new UnauthorizedHttpException('Access denied');
+        }
         $microPost->setTime(new \DateTime());
         $form = $this->formFactory->create(MicroPostType::class, $microPost);
         $form->handleRequest($request);
@@ -107,6 +133,7 @@ class MicroPostController extends Controller
     }
     /**
      * @Route("/post/{id}",name="micro_post_post")
+     * 
      */
     public function post(MicroPost $post)
     {
@@ -118,6 +145,7 @@ class MicroPostController extends Controller
     }
     /**
      * @Route("/delete/{id}",name="micro_post_delete")
+     * @Security("is_granted('delete',microPost)",message="Access denied")
      */
     public function delete(MicroPost $microPost)
     {

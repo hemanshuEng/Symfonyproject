@@ -15,21 +15,30 @@ class AppFixtures extends Fixture
             'username' => 'jhon_doe',
             'email' => 'john_doe@doe.com',
             'password' => 'john123',
-            'fullname' => 'John Doe'
+            'fullname' => 'John Doe',
+            'roles'    => [User::ROLE_USER]
         ],
         [
             'username' => 'rod_smith',
             'email' => 'rob_smiths@smith.com',
             'password' => 'rob123',
-            'fullname' => 'Rob Smith'
+            'fullname' => 'Rob Smith',
+            'roles'    => [User::ROLE_USER]
         ],
         [
             'username' => 'marry_gold',
             'email' => 'marry_gold@gold.com',
             'password' => 'marry1234',
-            'fullname' => 'Marry Gold'
+            'fullname' => 'Marry Gold',
+            'roles'    => [User::ROLE_USER]
         ],
-
+        [
+            'username' => 'super_admin',
+            'email' => 'super_admin@admin.com',
+            'password' => 'admin1234',
+            'fullname' => 'Super Admin',
+            'roles'    => [User::ROLE_ADMIN]
+        ],
     ];
 
     private const POST_TEXT = [
@@ -83,6 +92,7 @@ class AppFixtures extends Fixture
             $user->setFullname($userData['fullname']);
             $user->setEmail($userData['email']);
             $user->setPassword($this->passwordEncoder->encodePassword($user, $userData['password']));
+            $user->setRoles($userData['roles']);
             $this->addReference($userData['username'], $user);
             $manager->persist($user);
         }

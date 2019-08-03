@@ -3,7 +3,7 @@
 
     <div class="my-3 p-3 bg-white rounded shadow">
         {% for message in app.flashes('notice')%}
-            <div class="alert-success">
+            <div class="alert-success my-2 p-2">
                 {{message}}
             </div>
         {% endfor %}
