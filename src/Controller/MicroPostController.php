@@ -89,6 +89,8 @@ class MicroPostController extends Controller
     {
         $microPost = new MicroPost();
         $microPost->setTime(new \DateTime());
+        $user = $this->getUser();
+        $microPost->setUser($user);
         $form = $this->formFactory->create(MicroPostType::class, $microPost);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
