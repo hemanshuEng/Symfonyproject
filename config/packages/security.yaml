@@ -24,7 +24,7 @@ security:
       #  always_use_default_target_path: false
       # use_referer: true
       # failure_path:
-        # username_parameter :_username
+      # username_parameter :_username
 
       logout:
         path: security_logout
@@ -34,3 +34,5 @@ security:
   access_control:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     # - { path: ^/profile, roles: ROLE_USER }
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER

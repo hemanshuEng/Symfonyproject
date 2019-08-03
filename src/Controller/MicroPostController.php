@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\MicroPost;
+use App\Entity\User;
 
+use App\Entity\MicroPost;
 use App\Form\MicroPostType;
 use App\Security\MicroPostVoter;
 use App\Repository\MicroPostRepository;
@@ -16,9 +17,9 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 // use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -140,6 +141,19 @@ class MicroPostController extends Controller
         //  $post= $this->microPostRepository->find($id);
         $html = $this->twig->render('micro-post/post.html.twig', [
             'post' => $post
+        ]);
+        return new Response($html);
+    }
+    /**
+     * @Route("/user/{username}",name="micro_post_user")
+     * 
+     */
+    public function userPosts(User $userwithPosts)
+    {
+        $html = $this->twig->render('micro-post/index.html.twig', [
+            'posts' => $this->microPostRepository->findBy([
+                'user' => $userwithPosts
+            ], ['time' => 'DESC'])
         ]);
         return new Response($html);
     }

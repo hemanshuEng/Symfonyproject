@@ -8,20 +8,23 @@
             </div>
         {% endfor %}
         {% for post in posts %}
-            <a href="{{path('micro_post_post',{'id':post.id})}}">
-                <div class="media text-muted pt-3">
-                    {% set intials= post.user.fullname|split(' ')%}
-                    <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text={{intials[0]|first}}{{intials[1]|first}}&bg=e83e8c&fg&size=8">
-                    <p class="media-body pb-3 mb-0 small lh-125 ">
-                        <span class="d-block">
-                            <strong class="text-grey-dark">@{{post.user.username}}</strong>
-                            <small>{{post.time|date("d/m/Y")}}</small>
 
-                        </span>
-                        {{post.text}}
-                    </p>
-                </div>
-            </a>
+            <div class="media text-muted pt-3">
+                {% set intials= post.user.fullname|split(' ')%}
+                <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text={{intials[0]|first}}{{intials[1]|first}}&bg=e83e8c&fg&size=8">
+                <p class="media-body pb-3 mb-0 small lh-125 ">
+                    <span class="d-block">
+                        <a href="{{path('micro_post_user',{'username':post.user.username})}}">
+                            <strong class="text-grey-dark">@{{post.user.username}}</strong>
+                        </a>
+                        <small>{{post.time|date("d/m/Y")}}</small>
+
+                    </span>
+                    <a href="{{path('micro_post_post',{'id':post.id})}}">
+                        {{post.text}}</a>
+                </p>
+            </div>
+
             <small class="d-block text-right mt-3">
                 {% if is_granted('edit',post) %}
                     <a href="{{path('micro_post_edit',{'id':post.id})}}">Edit</a>
