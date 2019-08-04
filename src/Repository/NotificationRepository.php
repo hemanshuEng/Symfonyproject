@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Notification;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Notification|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,13 @@ class NotificationRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findUnseenByUser(User $user)
+    {
+        $db=$this->createQueryBuilder('n');
+        return $db->select('count(n)')
+         ->where('n.user = :user')
+         ->setParameter('user',$user)
+         ->getQuery()
+         ->getSingleScalarResult();
+    }
 }

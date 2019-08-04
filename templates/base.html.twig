@@ -7,6 +7,7 @@
             {% endblock %}
         </title>
         {% block stylesheets %}
+            <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
             {{ encore_entry_link_tags('app')}}
         {% endblock %}
     </head>
@@ -19,6 +20,15 @@
             <div class="collapse navbar-collapse" id="collapsibleNavId">
                 <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                     {% if is_granted('ROLE_USER') %}
+                        <li class="nav-item text-nowrap border-right border-secondary">
+                            <a class="nav-link" href="">
+                                Notifications
+                                <span
+                                    class="badge badge-light" id="notification-count"><i class="fa fa-circle fa-circle-o-notch fa-spin"></i>
+
+                                </span>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{path('micro_post_create')}}">Add new<span class="sr-only">(current)</span>
                             </a>
@@ -45,6 +55,23 @@
 
             {% block javascripts %}
                 {{ encore_entry_script_tags('app') }}
+                {% if is_granted('ROLE_USER') %}
+                    <script>
+                        function fetchNotificationCount() {
+                            fetch('{{ path("notification_unread") }}', {'credetials': 'include'}).then(function (response) {
+                                response.json().then(function (json) {
+                                    document.getElementById('notification-count').innerText = json.count;
+                                    setTimeout(fetchNotificationCount, 5000);
+
+                                }).catch(function (reason) {
+                                    console.log(reason);
+                                })
+                            });
+                        }
+                        fetchNotificationCount();
+                    </script>
+                {% endif %}
+
             {% endblock %}
         </body>
     </html>
