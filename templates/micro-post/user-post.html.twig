@@ -1,0 +1,97 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+    <div
+        class="my-3 p-3 bg-white rounded shadow">
+        {# {% for message in app.flashes('notice')%}
+                                                            <div class="alert-success my-2 p-2">
+                                                                {{message}}
+                                                            </div>
+                                                        {% endfor %} #}
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">{{user.fullname}}</h4>
+                <small class="text-muted">@{{user.username}}</small>
+                {% if is_granted('ROLE_USER') and user !=app.user %}
+                    {% if user.followers.contains(app.user) == false %}
+                        <a class="btn btn-primary" href="{{path('following_follow',{'id':user.id})}}">Follow</a>
+                    {% else %}
+
+                        <a class="btn btn-outline-danger" href="{{path('following_unfollow',{'id':user.id})}}">Unfollow</a>
+                    {% endif %}
+
+
+                {% endif %}
+
+            </div>
+        </div>
+        .<div class="row">
+            <div class="col-sm-6 m-0">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5>Followers</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+
+                                {% for follower in user.followers %}
+                                    <a href="{{path('micro_post_user',{'username':follower.username})}}">
+                                        @{{follower.username}}
+                                    </a>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 m-0">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Following</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+
+                                {% for following in user.following %}
+                                    <a href="{{path('micro_post_user',{'username':following.username})}}">
+                                        @{{following.username}}
+                                    </a>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% for post in posts %}
+
+            <div class="media text-muted pt-3">
+                {% set intials= post.user.fullname|split(' ')%}
+                <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text={{intials[0]|first}}{{intials[1]|first}}&bg=e83e8c&fg&size=8">
+                <p class="media-body pb-3 mb-0 small lh-125 ">
+                    <span class="d-block">
+                        <a href="{{path('micro_post_user',{'username':post.user.username})}}">
+                            <strong class="text-grey-dark">@{{post.user.username}}</strong>
+                        </a>
+                        <small>{{post.time|date("d/m/Y")}}</small>
+
+                    </span>
+                    <a href="{{path('micro_post_post',{'id':post.id})}}">
+                        {{post.text}}</a>
+                </p>
+            </div>
+
+            <small class="d-block text-right mt-3">
+                {% if is_granted('edit',post) %}
+                    <a href="{{path('micro_post_edit',{'id':post.id})}}">Edit</a>
+                {% endif %}
+                {% if is_granted('delete',post) %}
+                    <a href="{{path('micro_post_delete',{'id':post.id})}}">Delete</a>
+
+                {% endif %}
+
+            </small>
+            <div class="border-bottom border-grey"></div>
+        {% endfor %}
+    </div>
+    .
+{% endblock %}

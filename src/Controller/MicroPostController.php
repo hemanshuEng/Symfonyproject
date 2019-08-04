@@ -6,6 +6,7 @@ use App\Entity\User;
 
 use App\Entity\MicroPost;
 use App\Form\MicroPostType;
+use App\Entity\Collection;
 use App\Security\MicroPostVoter;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +22,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 // use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use App\Repository\UserRepository;
 
 /**
  * @Route("/micro-post")
@@ -76,13 +79,22 @@ class MicroPostController extends Controller
     /**
      * @Route("/",name="micro_post_index")
      */
-    public function index()
+    public function index(UserRepository $userRepository)
     {
-        //$posts= $this->getDoctrine()->getRepository(MicroPost::class)->findAll();
+        $currentUser = $this->getUser();
+        $usersToFollow = [];
+        if ($currentUser instanceof User) {
+            $posts = $this->microPostRepository->findAllByUsers($currentUser->getFollowing());
+            $usersToFollow = count($posts) === 0 ? $userRepository->findAllWithMoreThan5PostsExpectUser($currentUser) : [];
+        } else {
+            $posts = $this->microPostRepository->findBy([], ['time' => 'DESC']);
+        }
         $html = $this->twig->render('micro-post/index.html.twig', [
-            'posts' => $this->microPostRepository->findBy([], ['time' => 'DESC'])
+            'posts' => $posts,
+            'usersToFollow' => $usersToFollow
         ]);
         return new Response($html);
+        //$posts= $this->getDoctrine()->getRepository(MicroPost::class)->findAll();
     }
     /**
      *@Route("/edit/{id}",name="micro_post_edit")
@@ -150,10 +162,11 @@ class MicroPostController extends Controller
      */
     public function userPosts(User $userwithPosts)
     {
-        $html = $this->twig->render('micro-post/index.html.twig', [
+        $html = $this->twig->render('micro-post/user-post.html.twig', [
             'posts' => $this->microPostRepository->findBy([
                 'user' => $userwithPosts
-            ], ['time' => 'DESC'])
+            ], ['time' => 'DESC']),
+            'user' => $userwithPosts
         ]);
         return new Response($html);
     }

@@ -7,36 +7,49 @@
                 {{message}}
             </div>
         {% endfor %}
-        {% for post in posts %}
+        {% if usersToFollow|length >0 %}
+            <p>You are currently donot follow anyone,you might find them interesting</p>
+            {% for userToFollow in usersToFollow %}
+                <a href="{{path('micro_post_user',{'username':userToFollow.username})}}">
 
-            <div class="media text-muted pt-3">
-                {% set intials= post.user.fullname|split(' ')%}
-                <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text={{intials[0]|first}}{{intials[1]|first}}&bg=e83e8c&fg&size=8">
-                <p class="media-body pb-3 mb-0 small lh-125 ">
-                    <span class="d-block">
-                        <a href="{{path('micro_post_user',{'username':post.user.username})}}">
-                            <strong class="text-grey-dark">@{{post.user.username}}</strong>
-                        </a>
-                        <small>{{post.time|date("d/m/Y")}}</small>
+                    @{{userToFollow.username}},
+                </a>
+            {% endfor %}
+        {% else %}
 
-                    </span>
-                    <a href="{{path('micro_post_post',{'id':post.id})}}">
-                        {{post.text}}</a>
-                </p>
-            </div>
 
-            <small class="d-block text-right mt-3">
-                {% if is_granted('edit',post) %}
-                    <a href="{{path('micro_post_edit',{'id':post.id})}}">Edit</a>
-                {% endif %}
-                {% if is_granted('delete',post) %}
-                    <a href="{{path('micro_post_delete',{'id':post.id})}}">Delete</a>
+            {% for post in posts %}
 
-                {% endif %}
+                <div class="media text-muted pt-3">
+                    {% set intials= post.user.fullname|split(' ')%}
+                    <img alt="" class="mr-2 rounded" data-src="holder.js/32x32?text={{intials[0]|first}}{{intials[1]|first}}&bg=e83e8c&fg&size=8">
+                    <p class="media-body pb-3 mb-0 small lh-125 ">
+                        <span class="d-block">
+                            <a href="{{path('micro_post_user',{'username':post.user.username})}}">
+                                <strong class="text-grey-dark">@{{post.user.username}}</strong>
+                            </a>
+                            <small>{{post.time|date("d/m/Y")}}</small>
 
-            </small>
-            <div class="border-bottom border-grey"></div>
-        {% endfor %}
+                        </span>
+                        <a href="{{path('micro_post_post',{'id':post.id})}}">
+                            {{post.text}}</a>
+                    </p>
+                </div>
+
+                <small class="d-block text-right mt-3">
+                    {% if is_granted('edit',post) %}
+                        <a href="{{path('micro_post_edit',{'id':post.id})}}">Edit</a>
+                    {% endif %}
+                    {% if is_granted('delete',post) %}
+                        <a href="{{path('micro_post_delete',{'id':post.id})}}">Delete</a>
+
+                    {% endif %}
+
+                </small>
+                <div class="border-bottom border-grey"></div>
+            {% endfor %}
+        {% endif %}
+
     </div>
     .
 {% endblock %}
